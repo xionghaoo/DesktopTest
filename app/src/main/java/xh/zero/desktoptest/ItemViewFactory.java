@@ -53,8 +53,8 @@ public class ItemViewFactory {
                     view = builder.setShortcutItem(item).getView();
                     break;
                 case GROUP:
-//                    view = builder.setGroupItem(context, callback, item).getView();
-//                    view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                    view = builder.setGroupItem(context, callback, item).getView();
+                    view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                     break;
                 case ACTION:
 //                    view = builder.setActionItem(item).getView();

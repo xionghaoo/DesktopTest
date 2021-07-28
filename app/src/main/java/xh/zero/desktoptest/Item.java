@@ -127,6 +127,7 @@ public class Item {
     }
 
     public List<Item> getGroupItems() {
+        if (_items == null) _items = new ArrayList();
         return _items;
     }
 

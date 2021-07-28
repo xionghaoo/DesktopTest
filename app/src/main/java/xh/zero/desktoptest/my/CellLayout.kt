@@ -1,4 +1,4 @@
-package xh.zero.desktoptest
+package xh.zero.desktoptest.my
 
 import android.content.Context
 import android.graphics.Rect
@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.core.view.GestureDetectorCompat
 
 class CellLayout : ViewGroup {
-    private val row = 10
+    private val row = 5
     private val col = 6
     private val cellRectList = ArrayList<ArrayList<Rect>>()
     private var cellWidth: Int = 0
@@ -54,11 +54,12 @@ class CellLayout : ViewGroup {
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (detector.onTouchEvent(event)) {
-            return true
-        } else {
-            return super.onTouchEvent(event)
-        }
+//        if (detector.onTouchEvent(event)) {
+//            return true
+//        } else {
+//            return super.onTouchEvent(event)
+//        }
+        return super.onTouchEvent(event)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {

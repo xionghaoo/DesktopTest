@@ -44,84 +44,84 @@ public final class Desktop extends ViewPager implements DesktopCallback {
         super(context, attr);
     }
 
-    public static boolean handleOnDropOver(MainActivity MainActivity, Item dropItem, Item item, View itemView, CellContainer parent, int page, Definitions.ItemPosition itemPosition, DesktopCallback callback) {
+    public static boolean handleOnDropOver(MainActivity mainActivity, Item dropItem, Item item, View itemView, CellContainer parent, int page, Definitions.ItemPosition itemPosition, DesktopCallback callback) {
         if (item != null) {
             if (dropItem != null) {
                 Item.Type type = item._type;
                 if (type != null) {
                     switch (type) {
                         case APP:
-//                        case SHORTCUT:
-//                            if (Type.APP.equals(dropItem._type) || Type.SHORTCUT.equals(dropItem._type)) {
-//                                parent.removeView(itemView);
-//                                Item group = Item.newGroupItem();
-//                                item._location = ItemPosition.Group;
-//                                dropItem._location = ItemPosition.Group;
-//                                group.getGroupItems().add(item);
-//                                group.getGroupItems().add(dropItem);
-//                                group._x = item._x;
-//                                group._y = item._y;
-//                                MainActivity._db.saveItem(dropItem, page, ItemPosition.Group);
-//                                MainActivity._db.saveItem(item, ItemState.Hidden);
-//                                MainActivity._db.saveItem(dropItem, ItemState.Hidden);
-//                                MainActivity._db.saveItem(group, page, itemPosition);
-//                                callback.addItemToPage(group, page);
-//                                MainActivity launcher = MainActivity.Companion.getLauncher();
-//                                if (launcher != null) {
-//                                    launcher.getDesktop().consumeLastItem();
+                        case SHORTCUT:
+                            if (Item.Type.APP.equals(dropItem._type) || Item.Type.SHORTCUT.equals(dropItem._type)) {
+                                parent.removeView(itemView);
+                                Item group = Item.newGroupItem();
+                                item._location = Definitions.ItemPosition.Group;
+                                dropItem._location = Definitions.ItemPosition.Group;
+                                group.getGroupItems().add(item);
+                                group.getGroupItems().add(dropItem);
+                                group._x = item._x;
+                                group._y = item._y;
+                                mainActivity.Companion.getDb().saveItem(dropItem, page, Definitions.ItemPosition.Group);
+                                mainActivity.Companion.getDb().saveItem(item, Definitions.ItemState.Hidden);
+                                mainActivity.Companion.getDb().saveItem(dropItem, Definitions.ItemState.Hidden);
+                                mainActivity.Companion.getDb().saveItem(group, page, itemPosition);
+                                callback.addItemToPage(group, page);
+                                MainActivity launcher = MainActivity.Companion.getLauncher();
+                                if (launcher != null) {
+                                    launcher.getDesktop().consumeLastItem();
 //                                    launcher.getDock().consumeLastItem();
-//                                }
-//                                return true;
-//                            } else if (Type.GROUP.equals(dropItem._type) && dropItem.getGroupItems().size() < GroupPopupView.GroupDef._maxItem) {
-//                                parent.removeView(itemView);
-//                                Item group = Item.newGroupItem();
-//                                item._location = ItemPosition.Group;
-//                                dropItem._location = ItemPosition.Group;
-//                                group.getGroupItems().add(item);
-//                                group.getGroupItems().addAll(dropItem.getGroupItems());
-//                                group._x = item._x;
-//                                group._y = item._y;
-//                                MainActivity._db.deleteItem(dropItem, false);
-//                                MainActivity._db.saveItem(item, ItemState.Hidden);
-//                                MainActivity._db.saveItem(group, page, itemPosition);
-//                                callback.addItemToPage(group, page);
-//                                MainActivity launcher = MainActivity.Companion.getLauncher();
-//                                if (launcher != null) {
-//                                    launcher.getDesktop().consumeLastItem();
+                                }
+                                return true;
+                            } else if (Item.Type.GROUP.equals(dropItem._type) && dropItem.getGroupItems().size() < GroupPopupView.GroupDef._maxItem) {
+                                parent.removeView(itemView);
+                                Item group = Item.newGroupItem();
+                                item._location = Definitions.ItemPosition.Group;
+                                dropItem._location = Definitions.ItemPosition.Group;
+                                group.getGroupItems().add(item);
+                                group.getGroupItems().addAll(dropItem.getGroupItems());
+                                group._x = item._x;
+                                group._y = item._y;
+                                MainActivity.Companion.getDb().deleteItem(dropItem, false);
+                                MainActivity.Companion.getDb().saveItem(item, Definitions.ItemState.Hidden);
+                                MainActivity.Companion.getDb().saveItem(group, page, itemPosition);
+                                callback.addItemToPage(group, page);
+                                MainActivity launcher = MainActivity.Companion.getLauncher();
+                                if (launcher != null) {
+                                    launcher.getDesktop().consumeLastItem();
 //                                    launcher.getDock().consumeLastItem();
-//                                }
-//                                return true;
-//                            }
-//                            break;
-//                        case GROUP:
-//                            if ((Item.Type.APP.equals(dropItem._type) || Type.SHORTCUT.equals(dropItem._type)) && item.getGroupItems().size() < GroupPopupView.GroupDef._maxItem) {
-//                                parent.removeView(itemView);
-//                                dropItem._location = ItemPosition.Group;
-//                                item.getGroupItems().add(dropItem);
-//                                MainActivity._db.saveItem(dropItem, page, ItemPosition.Group);
-//                                MainActivity._db.saveItem(dropItem, ItemState.Hidden);
-//                                MainActivity._db.saveItem(item, page, itemPosition);
-//                                callback.addItemToPage(item, page);
-//                                MainActivity launcher = MainActivity.Companion.getLauncher();
-//                                if (launcher != null) {
-//                                    launcher.getDesktop().consumeLastItem();
+                                }
+                                return true;
+                            }
+                            break;
+                        case GROUP:
+                            if ((Item.Type.APP.equals(dropItem._type) || Item.Type.SHORTCUT.equals(dropItem._type)) && item.getGroupItems().size() < GroupPopupView.GroupDef._maxItem) {
+                                parent.removeView(itemView);
+                                dropItem._location = Definitions.ItemPosition.Group;
+                                item.getGroupItems().add(dropItem);
+                                MainActivity.Companion.getDb().saveItem(dropItem, page, Definitions.ItemPosition.Group);
+                                MainActivity.Companion.getDb().saveItem(dropItem, Definitions.ItemState.Hidden);
+                                MainActivity.Companion.getDb().saveItem(item, page, itemPosition);
+                                callback.addItemToPage(item, page);
+                                MainActivity launcher = MainActivity.Companion.getLauncher();
+                                if (launcher != null) {
+                                    launcher.getDesktop().consumeLastItem();
 //                                    launcher.getDock().consumeLastItem();
-//                                }
-//                                return true;
-//                            } else if (Type.GROUP.equals(dropItem._type) && item.getGroupItems().size() < GroupPopupView.GroupDef._maxItem && dropItem.getGroupItems().size() < GroupPopupView.GroupDef._maxItem) {
-//                                parent.removeView(itemView);
-//                                item.getGroupItems().addAll(dropItem.getGroupItems());
-//                                MainActivity._db.saveItem(item, page, itemPosition);
-//                                MainActivity._db.deleteItem(dropItem, false);
-//                                callback.addItemToPage(item, page);
-//                                MainActivity launcher = MainActivity.Companion.getLauncher();
-//                                if (launcher != null) {
-//                                    launcher.getDesktop().consumeLastItem();
+                                }
+                                return true;
+                            } else if (Item.Type.GROUP.equals(dropItem._type) && item.getGroupItems().size() < GroupPopupView.GroupDef._maxItem && dropItem.getGroupItems().size() < GroupPopupView.GroupDef._maxItem) {
+                                parent.removeView(itemView);
+                                item.getGroupItems().addAll(dropItem.getGroupItems());
+                                MainActivity.Companion.getDb().saveItem(item, page, itemPosition);
+                                MainActivity.Companion.getDb().deleteItem(dropItem, false);
+                                callback.addItemToPage(item, page);
+                                MainActivity launcher = MainActivity.Companion.getLauncher();
+                                if (launcher != null) {
+                                    launcher.getDesktop().consumeLastItem();
 //                                    launcher.getDock().consumeLastItem();
-//                                }
-//                                return true;
-//                            }
-//                            break;
+                                }
+                                return true;
+                            }
+                            break;
                         default:
                             break;
                     }

@@ -1,12 +1,9 @@
 package xh.zero.desktoptest
 
 import android.appwidget.AppWidgetManager
-import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import java.util.*
+import xh.zero.desktoptest.homeparts.HpDragOption
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,6 +37,9 @@ class MainActivity : AppCompatActivity() {
         appWidgetHost = WidgetHost(applicationContext, R.id.app_widget_host)
         appWidgetHost?.startListening()
 
+        val hpDragOption = HpDragOption()
+        hpDragOption.initDragNDrop(this, null, null, getItemOptionView())
+
         initAppManager()
 
 //        val cell = findViewById<CellLayout>(R.id.cell_layout)
@@ -59,6 +59,10 @@ class MainActivity : AppCompatActivity() {
         return findViewById(R.id.desktop)
     }
 
+    fun getGroupPopup(): GroupPopupView {
+        return findViewById(R.id.groupPopup)
+    }
+
     protected fun initAppManager() {
         if (true) {
 //            Setup.appSettings().setAppFirstLaunch(false)
@@ -71,17 +75,29 @@ class MainActivity : AppCompatActivity() {
                 Definitions.ItemPosition.Dock
             )
         }
-        appLoader?.addUpdateListener(AppUpdateListener {
+        getDesktop().initDesktop()
+        appLoader?.addUpdateListener(AppUpdateListener { apps ->
+            for (i in 0..20) {
+                val appItem = Item.newAppItem(apps[i])
+                val pos = getDesktop().currentPage.findFreeSpace()
+                if (pos != null) {
+                    appItem._x = pos.x
+                    appItem._y = pos.y
+                    db?.saveItem(appItem, 0, Definitions.ItemPosition.Desktop)
+                    getDesktop().addItemToPage(appItem, getDesktop().currentItem)
+                }
+            }
+//            getDesktop().initDesktop()
+//            getDock().initDock()
+            false
+        })
+        appLoader?.addDeleteListener(AppDeleteListener { apps ->
             getDesktop().initDesktop()
 //            getDock().initDock()
             false
         })
-        appLoader?.addDeleteListener(AppDeleteListener {
-            getDesktop().initDesktop()
-//            getDock().initDock()
-            false
-        })
-        AppManager.getInstance(this).init()
+        appLoader?.init()
+
     }
 
 //    fun updateAdapter(apps: List<App>) {

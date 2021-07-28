@@ -16,6 +16,7 @@ import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -48,31 +49,31 @@ public class Tool {
         }
     }
 //
-//    public static void visibleViews(long duration, View... views) {
-//        if (views == null) return;
-//        for (View view : views) {
-//            if (view == null) continue;
-//            view.animate().alpha(1).setDuration(duration).setInterpolator(new AccelerateDecelerateInterpolator()).withStartAction(new Runnable() {
-//                @Override
-//                public void run() {
-//                    view.setVisibility(View.VISIBLE);
-//                }
-//            });
-//        }
-//    }
-//
-//    public static void invisibleViews(long duration, View... views) {
-//        if (views == null) return;
-//        for (final View view : views) {
-//            if (view == null) continue;
-//            view.animate().alpha(0).setDuration(duration).setInterpolator(new AccelerateDecelerateInterpolator()).withEndAction(new Runnable() {
-//                @Override
-//                public void run() {
-//                    view.setVisibility(View.INVISIBLE);
-//                }
-//            });
-//        }
-//    }
+    public static void visibleViews(long duration, View... views) {
+        if (views == null) return;
+        for (View view : views) {
+            if (view == null) continue;
+            view.animate().alpha(1).setDuration(duration).setInterpolator(new AccelerateDecelerateInterpolator()).withStartAction(new Runnable() {
+                @Override
+                public void run() {
+                    view.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
+    public static void invisibleViews(long duration, View... views) {
+        if (views == null) return;
+        for (final View view : views) {
+            if (view == null) continue;
+            view.animate().alpha(0).setDuration(duration).setInterpolator(new AccelerateDecelerateInterpolator()).withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    view.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+    }
 //
 //    public static void goneViews(long duration, View... views) {
 //        if (views == null) return;
@@ -105,9 +106,9 @@ public class Tool {
         }, animTime);
     }
 //
-//    public static void toast(Context context, int str) {
-//        Toast.makeText(context, context.getResources().getString(str), Toast.LENGTH_SHORT).show();
-//    }
+    public static void toast(Context context, int str) {
+        Toast.makeText(context, context.getResources().getString(str), Toast.LENGTH_SHORT).show();
+    }
 //
 //    public static void toast(Context context, String str) {
 //        Toast.makeText(context, str, Toast.LENGTH_SHORT).show();

@@ -210,19 +210,19 @@ public class AppItemView extends View implements Drawable.Callback, Notification
             return this;
         }
 
-//        public Builder setGroupItem(Context context, final DesktopCallback callback, final Item item) {
-//            _view.setLabel(item.getLabel());
-//            _view.setIcon(new GroupDrawable(context, item, Setup.appSettings().getIconSize()));
-//            _view.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (HomeActivity.Companion.getLauncher() != null && (HomeActivity.Companion.getLauncher()).getGroupPopup().showPopup(item, v, callback)) {
-//                        ((GroupDrawable) ((AppItemView) v).getIcon()).popUp();
-//                    }
-//                }
-//            });
-//            return this;
-//        }
+        public Builder setGroupItem(Context context, final DesktopCallback callback, final Item item) {
+            _view.setLabel(item.getLabel());
+            _view.setIcon(new GroupDrawable(context, item, 52));
+            _view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (MainActivity.Companion.getLauncher() != null && (MainActivity.Companion.getLauncher()).getGroupPopup().showPopup(item, v, callback)) {
+                        ((GroupDrawable) ((AppItemView) v).getIcon()).popUp();
+                    }
+                }
+            });
+            return this;
+        }
 //
 //        public Builder setActionItem(Item item) {
 //            _view.setLabel(item.getLabel());

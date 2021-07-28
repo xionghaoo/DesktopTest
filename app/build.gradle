@@ -52,4 +52,7 @@ dependencies {
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
     implementation 'org.slf4j:slf4j-android:1.7.21'
     implementation 'in.championswimmer:SimpleFingerGestures_Android_Library:1.1'
+    implementation ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
+        transitive = true
+    }
 }

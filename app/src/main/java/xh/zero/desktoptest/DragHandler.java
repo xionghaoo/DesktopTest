@@ -5,6 +5,8 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.view.View;
 
+import xh.zero.desktoptest.my.DesktopHomeActivity;
+
 public final class DragHandler {
     public static Bitmap _cachedDragBitmap;
 
@@ -13,6 +15,16 @@ public final class DragHandler {
 
         if (MainActivity.Companion.getLauncher() != null)
             MainActivity.Companion.getLauncher().getItemOptionView().startDragNDropOverlay(view, item, action);
+
+        if (desktopCallback != null)
+            desktopCallback.setLastItem(item, view);
+    }
+
+    public static void startDragHome(View view, Item item, DragAction.Action action, final DesktopCallback desktopCallback) {
+        _cachedDragBitmap = loadBitmapFromView(view);
+
+        if (DesktopHomeActivity.Companion.getLauncher() != null)
+            DesktopHomeActivity.Companion.getLauncher().getItemOptionView().startDragNDropOverlay(view, item, action);
 
         if (desktopCallback != null)
             desktopCallback.setLastItem(item, view);
