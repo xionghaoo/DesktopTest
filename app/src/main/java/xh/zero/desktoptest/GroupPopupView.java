@@ -230,7 +230,7 @@ public class GroupPopupView extends RevealFrameLayout {
         int finalRadius = Math.max(_popupCard.getWidth(), _popupCard.getHeight());
         int startRadius = Tool.dp2px(52 / 2);
 
-        long animDuration = 80 * 10;
+        long animDuration = 20 * 10;
         _folderAnimator = ViewAnimationUtils.createCircularReveal(_popupCard, _cx, _cy, startRadius, finalRadius);
         _folderAnimator.setStartDelay(0);
         _folderAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -244,7 +244,7 @@ public class GroupPopupView extends RevealFrameLayout {
         if (_folderAnimator == null || _folderAnimator.isRunning())
             return;
 
-        long animDuration = 80 * 10;
+        long animDuration = 20 * 10;
         Tool.invisibleViews(animDuration, _cellContainer);
 
         int startRadius = Tool.dp2px(52 / 2);

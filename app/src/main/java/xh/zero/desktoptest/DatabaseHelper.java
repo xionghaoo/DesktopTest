@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_QUERY = "SELECT * FROM ";
     private static final String SQL_CREATE =
             "CREATE TABLE " + TABLE_HOME + " ("
-                    + COLUMN_TIME + " INTEGER PRIMARY KEY,"
+                    + COLUMN_TIME + " VARCHAR PRIMARY KEY,"
                     + COLUMN_TYPE + " VARCHAR,"
                     + COLUMN_LABEL + " VARCHAR,"
                     + COLUMN_X_POS + " INTEGER,"
@@ -62,7 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void createItem(Item item, int page, Definitions.ItemPosition itemPosition) {
-        Log.i(this.getClass().getName(), String.format("createItem: %s (ID: %d)", item.getLabel(), item.getId()));
+        Log.i(this.getClass().getName(), String.format("createItem: %s (ID: %s)", item.getLabel(), item.getId()));
         ContentValues itemValues = new ContentValues();
         itemValues.put(COLUMN_TIME, item.getId());
         itemValues.put(COLUMN_TYPE, item.getType().toString());
@@ -74,7 +74,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         switch (item.getType()) {
             case APP:
             case SHORTCUT:
-                Tool.saveIcon(_context, Tool.drawableToBitmap(item.getIcon()), Integer.toString(item.getId()));
+                Tool.saveIcon(_context, Tool.drawableToBitmap(item.getIcon()), item.getId());
                 itemValues.put(COLUMN_DATA, Tool.getIntentAsString(item.getIntent()));
                 break;
             case GROUP:
@@ -114,12 +114,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void saveItem(Item item, int page, Definitions.ItemPosition itemPosition) {
-        String SQL_QUERY_SPECIFIC = SQL_QUERY + TABLE_HOME + " WHERE " + COLUMN_TIME + " = " + item.getId();
-        Cursor cursor = _db.rawQuery(SQL_QUERY_SPECIFIC, null);
-        if (cursor.getCount() == 0) {
+        if (item.getId().isEmpty()) {
             createItem(item, page, itemPosition);
-        } else if (cursor.getCount() == 1) {
-            updateItem(item, page, itemPosition);
+        } else {
+            String SQL_QUERY_SPECIFIC = SQL_QUERY + TABLE_HOME + " WHERE " + COLUMN_TIME + " = \"" + item.getId() + "\"";
+            Cursor cursor = _db.rawQuery(SQL_QUERY_SPECIFIC, null);
+            if (cursor.getCount() == 0) {
+                createItem(item, page, itemPosition);
+            } else if (cursor.getCount() == 1) {
+
+                updateItem(item, page, itemPosition);
+            }
         }
     }
 
@@ -178,8 +183,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return dock;
     }
 
-    public Item getItem(int id) {
-        String SQL_QUERY_SPECIFIC = SQL_QUERY + TABLE_HOME + " WHERE " + COLUMN_TIME + " = " + id;
+    public Item getItem(String id) {
+        String SQL_QUERY_SPECIFIC = SQL_QUERY + TABLE_HOME + " WHERE " + COLUMN_TIME + " = \"" + id + "\"";
         Cursor cursor = _db.rawQuery(SQL_QUERY_SPECIFIC, null);
         Item item = null;
         if (cursor.moveToFirst()) {
@@ -191,7 +196,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // update data attribute for an item
     public void updateItem(Item item) {
-        Log.i(this.getClass().getName(), String.format("updateItem: %s %d", item.getLabel(), item.getId()));
+        Log.i(this.getClass().getName(), String.format("updateItem: %s %s", item.getLabel(), item.getId()));
 
         ContentValues itemValues = new ContentValues();
         itemValues.put(COLUMN_LABEL, item.getLabel());
@@ -202,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         switch (item.getType()) {
             case APP:
             case SHORTCUT:
-                Tool.saveIcon(_context, Tool.drawableToBitmap(item.getIcon()), Integer.toString(item.getId()));
+                Tool.saveIcon(_context, Tool.drawableToBitmap(item.getIcon()), item.getId());
                 itemValues.put(COLUMN_DATA, Tool.getIntentAsString(item.getIntent()));
                 break;
             case GROUP:
@@ -223,22 +228,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 itemValues.put(COLUMN_DATA, concat);
                 break;
         }
-        _db.update(TABLE_HOME, itemValues, COLUMN_TIME + " = " + item.getId(), null);
+        _db.update(TABLE_HOME, itemValues, COLUMN_TIME + " = \"" + item.getId() + "\"", null);
     }
 
     // update the state of an item
     public void updateItem(Item item, Definitions.ItemState state) {
-        Log.i(this.getClass().getName(), String.format("updateItem: %s %d", item.getLabel(), item.getId()));
+        Log.i(this.getClass().getName(), String.format("updateItem: %s %s", item.getLabel(), item.getId()));
 
         ContentValues itemValues = new ContentValues();
         itemValues.put(COLUMN_STATE, state.ordinal());
 
-        _db.update(TABLE_HOME, itemValues, COLUMN_TIME + " = " + item.getId(), null);
+        _db.update(TABLE_HOME, itemValues, COLUMN_TIME + " = \"" + item.getId() + "\"", null);
     }
 
     // update the fields only used by the database
     public void updateItem(Item item, int page, Definitions.ItemPosition itemPosition) {
-        Log.i(this.getClass().getName(), String.format("updateItem: %s %d", item.getLabel(), item.getId()));
+        Log.i(this.getClass().getName(), String.format("updateItem: %s %s", item.getLabel(), item.getId()));
 
         deleteItem(item, false);
         createItem(item, page, itemPosition);
@@ -246,7 +251,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private Item getSelection(Cursor cursor) {
         Item item = new Item();
-        int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_TIME)));
+        String id = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
         Item.Type type = Item.Type.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_TYPE)));
         String label = cursor.getString(cursor.getColumnIndex(COLUMN_LABEL));
         int x = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_X_POS)));
@@ -272,7 +277,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 dataSplit = data.split(Definitions.DELIMITER);
                 for (String string : dataSplit) {
                     if (string.isEmpty()) continue;
-                    Item groupItem = getItem(Integer.parseInt(string));
+                    Item groupItem = getItem(string);
                     if (groupItem != null) {
                         item.getItems().add(groupItem);
                     }

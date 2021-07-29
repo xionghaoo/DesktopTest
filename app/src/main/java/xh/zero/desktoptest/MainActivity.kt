@@ -1,6 +1,5 @@
 package xh.zero.desktoptest
 
-import android.appwidget.AppWidgetManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         var launcher: MainActivity? = null
 
-        var db: DatabaseHelper? = null
+        lateinit var db: DatabaseHelper
         var appLoader: AppManager? = null
 
         const val REQUEST_PICK_APPWIDGET = 0x2678
@@ -73,35 +72,50 @@ class MainActivity : AppCompatActivity() {
         if (true) {
 //            Setup.appSettings().setAppFirstLaunch(false)
 //            Setup.appSettings().setAppShowIntro(false)
-            val appDrawerBtnItem = Item.newActionItem(8)
-            appDrawerBtnItem._x = 2
-            db?.saveItem(
-                appDrawerBtnItem,
-                0,
-                Definitions.ItemPosition.Dock
-            )
+//            val appDrawerBtnItem = Item.newActionItem(8)
+//            appDrawerBtnItem._x = 2
+//            db?.saveItem(
+//                appDrawerBtnItem,
+//                0,
+//                Definitions.ItemPosition.Dock
+//            )
         }
-        getDesktop().initDesktop()
-        appLoader?.addUpdateListener(AppUpdateListener { apps ->
-            for (i in 0..20) {
-                val appItem = Item.newAppItem(apps[i])
-                val pos = getDesktop().currentPage.findFreeSpace()
-                if (pos != null) {
-                    appItem._x = pos.x
-                    appItem._y = pos.y
-                    db?.saveItem(appItem, 0, Definitions.ItemPosition.Desktop)
-                    getDesktop().addItemToPage(appItem, getDesktop().currentItem)
-                }
-            }
-//            getDock().initDock()
-            false
-        })
-        appLoader?.addDeleteListener(AppDeleteListener { apps ->
+
+        val desktopItems = db.desktop
+        if (desktopItems.isEmpty()) {
+            // 数据库为空，首次加载桌面
             getDesktop().initDesktop()
+            appLoader?.addUpdateListener(AppUpdateListener { apps ->
+                for (i in 0..20) {
+                    val appItem = Item.newAppItem(apps[i])
+                    val pos = getDesktop().currentPage.findFreeSpace()
+                    if (pos != null) {
+                        appItem._x = pos.x
+                        appItem._y = pos.y
+                        db?.saveItem(appItem, 0, Definitions.ItemPosition.Desktop)
+                        getDesktop().addItemToPage(appItem, getDesktop().currentItem)
+                    }
+                }
 //            getDock().initDock()
-            false
-        })
-        appLoader?.init()
+                false
+            })
+            appLoader?.addDeleteListener(AppDeleteListener { apps ->
+                getDesktop().initDesktop()
+//            getDock().initDock()
+                false
+            })
+            appLoader?.init()
+        } else {
+            appLoader?.addUpdateListener(AppUpdateListener { apps ->
+                getDesktop().initDesktop()
+                false
+            })
+            appLoader?.addDeleteListener(AppDeleteListener { apps ->
+                getDesktop().initDesktop()
+                false
+            })
+            appLoader?.init()
+        }
 
     }
 

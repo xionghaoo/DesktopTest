@@ -13,7 +13,8 @@ public class Item {
     public Drawable _icon;
     public String _label;
     public Type _type;
-    public int _id;
+    public String _id;
+    public String _packageName;
     public Definitions.ItemPosition _location;
     public int _x = 0;
     public int _y = 0;
@@ -34,7 +35,8 @@ public class Item {
 
     public Item() {
         Random random = new Random();
-        _id = random.nextInt();
+        _id = "";
+        _packageName = "";
         _label = "";
     }
 
@@ -44,6 +46,8 @@ public class Item {
         item._label = app.getLabel();
         item._icon = app.getIcon();
         item._intent = Tool.getIntentFromApp(app);
+        item._id = app._packageName;
+        item._packageName = app._packageName;
         return item;
     }
 
@@ -60,6 +64,7 @@ public class Item {
 
     public static Item newGroupItem() {
         Item item = new Item();
+        item._id = "group_" + new Random().nextInt();
         item._type = Type.GROUP;
         item._label = "";
         item._spanX = 1;
@@ -99,14 +104,14 @@ public class Item {
 
     public void reset() {
         Random random = new Random();
-        _id = random.nextInt();
+        _id = "";
     }
 
-    public Integer getId() {
+    public String getId() {
         return _id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         _id = id;
     }
 
