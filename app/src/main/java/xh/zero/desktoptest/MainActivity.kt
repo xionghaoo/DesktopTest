@@ -15,11 +15,6 @@ class MainActivity : AppCompatActivity() {
         var launcher: MainActivity? = null
 
         var db: DatabaseHelper? = null
-
-        var appWidgetManager: AppWidgetManager? = null
-
-        var appWidgetHost: WidgetHost? = null
-
         var appLoader: AppManager? = null
 
         const val REQUEST_PICK_APPWIDGET = 0x2678
@@ -34,9 +29,9 @@ class MainActivity : AppCompatActivity() {
         db = DatabaseHelper(this)
         appLoader = AppManager.getInstance(this)
 
-        appWidgetManager = AppWidgetManager.getInstance(this)
-        appWidgetHost = WidgetHost(applicationContext, R.id.app_widget_host)
-        appWidgetHost?.startListening()
+//        appWidgetManager = AppWidgetManager.getInstance(this)
+//        appWidgetHost = WidgetHost(applicationContext, R.id.app_widget_host)
+//        appWidgetHost?.startListening()
 
         val findViewById = findViewById<View>(R.id.leftDragHandle)
         val findViewById2 = findViewById<View>(R.id.rightDragHandle)

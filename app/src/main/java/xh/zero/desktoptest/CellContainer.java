@@ -39,8 +39,8 @@ public class CellContainer extends ViewGroup {
     private Long _down = Long.valueOf(0);
     @Nullable
     private SimpleFingerGestures _gestures;
-    private boolean _hideGrid = true;
-    private final Paint _paint = new Paint(1);
+//    private boolean _hideGrid = true;
+//    private final Paint _paint = new Paint(1);
     private boolean[][] _occupied;
     private final Paint _outlinePaint = new Paint(1);
     private PeekDirection _peekDirection;
@@ -155,11 +155,11 @@ public class CellContainer extends ViewGroup {
 
     public CellContainer(Context context, AttributeSet attr) {
         super(context, attr);
-        _paint.setStyle(Style.STROKE);
-        _paint.setStrokeWidth(2.0f);
-        _paint.setStrokeJoin(Join.ROUND);
-        _paint.setColor(Color.WHITE);
-        _paint.setAlpha(0);
+//        _paint.setStyle(Style.STROKE);
+//        _paint.setStrokeWidth(2.0f);
+//        _paint.setStrokeJoin(Join.ROUND);
+//        _paint.setColor(Color.WHITE);
+//        _paint.setAlpha(0);
         _bgPaint.setStyle(Style.FILL);
         _bgPaint.setColor(Color.WHITE);
         _bgPaint.setAlpha(0);
@@ -183,7 +183,7 @@ public class CellContainer extends ViewGroup {
     }
 
     public final void setHideGrid(boolean hideGrid) {
-        _hideGrid = hideGrid;
+//        _hideGrid = hideGrid;
         invalidate();
     }
 
@@ -332,38 +332,38 @@ public class CellContainer extends ViewGroup {
         super.onDraw(canvas);
         canvas.drawRect(0f, 0f, getWidth(), getHeight(), _bgPaint);
 
-        if (_cells == null)
-            return;
-
-        float s = 7f;
-        for (int x = 0; x < _cellSpanH; x++) {
-            for (int y = 0; y < _cellSpanV; y++) {
-                if (x >= _cells.length || y >= _cells[0].length)
-                    continue;
-
-                Rect cell = _cells[x][y];
-
-                canvas.save();
-                canvas.rotate(45f, cell.left, cell.top);
-                canvas.drawRect(cell.left - s, cell.top - s, cell.left + s, cell.top + s, _paint);
-                canvas.restore();
-
-                canvas.save();
-                canvas.rotate(45f, cell.left, cell.bottom);
-                canvas.drawRect(cell.left - s, cell.bottom - s, cell.left + s, cell.bottom + s, _paint);
-                canvas.restore();
-
-                canvas.save();
-                canvas.rotate(45f, cell.right, cell.top);
-                canvas.drawRect(cell.right - s, cell.top - s, cell.right + s, cell.top + s, _paint);
-                canvas.restore();
-
-                canvas.save();
-                canvas.rotate(45f, cell.right, cell.bottom);
-                canvas.drawRect(cell.right - s, cell.bottom - s, cell.right + s, cell.bottom + s, _paint);
-                canvas.restore();
-            }
-        }
+//        if (_cells == null)
+//            return;
+//
+//        float s = 7f;
+//        for (int x = 0; x < _cellSpanH; x++) {
+//            for (int y = 0; y < _cellSpanV; y++) {
+//                if (x >= _cells.length || y >= _cells[0].length)
+//                    continue;
+//
+//                Rect cell = _cells[x][y];
+//
+//                canvas.save();
+//                canvas.rotate(45f, cell.left, cell.top);
+//                canvas.drawRect(cell.left - s, cell.top - s, cell.left + s, cell.top + s, _paint);
+//                canvas.restore();
+//
+//                canvas.save();
+//                canvas.rotate(45f, cell.left, cell.bottom);
+//                canvas.drawRect(cell.left - s, cell.bottom - s, cell.left + s, cell.bottom + s, _paint);
+//                canvas.restore();
+//
+//                canvas.save();
+//                canvas.rotate(45f, cell.right, cell.top);
+//                canvas.drawRect(cell.right - s, cell.top - s, cell.right + s, cell.top + s, _paint);
+//                canvas.restore();
+//
+//                canvas.save();
+//                canvas.rotate(45f, cell.right, cell.bottom);
+//                canvas.drawRect(cell.right - s, cell.bottom - s, cell.right + s, cell.bottom + s, _paint);
+//                canvas.restore();
+//            }
+//        }
 
         //Animating alpha and drawing projected image
         MainActivity homeActivity = MainActivity.Companion.getLauncher();
@@ -377,13 +377,13 @@ public class CellContainer extends ViewGroup {
         }
 
         //Animating alpha
-        if (_hideGrid && _paint.getAlpha() != 0) {
-            _paint.setAlpha(Math.max(_paint.getAlpha() - 20, 0));
-            invalidate();
-        } else if (!_hideGrid && _paint.getAlpha() != 255) {
-            _paint.setAlpha(Math.min(_paint.getAlpha() + 20, 255));
-            invalidate();
-        }
+//        if (_hideGrid && _paint.getAlpha() != 0) {
+//            _paint.setAlpha(Math.max(_paint.getAlpha() - 20, 0));
+//            invalidate();
+//        } else if (!_hideGrid && _paint.getAlpha() != 255) {
+//            _paint.setAlpha(Math.min(_paint.getAlpha() + 20, 255));
+//            invalidate();
+//        }
 
         //Animating alpha
         if (!_animateBackground && _bgPaint.getAlpha() != 0) {

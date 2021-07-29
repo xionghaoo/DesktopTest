@@ -89,7 +89,7 @@ public class HpDragOption {
                     if (i < _homeActivity.getDesktop().getPages().size() - 1) {
                         _homeActivity.getDesktop().setCurrentItem(i + 1);
                     } else if (i == _homeActivity.getDesktop().getPages().size() - 1) {
-                        _homeActivity.getDesktop().addPageRight(true);
+                        _homeActivity.getDesktop().addPageRight(false);
                     }
                     dragHandler.postDelayed(this, 1000);
                 }
