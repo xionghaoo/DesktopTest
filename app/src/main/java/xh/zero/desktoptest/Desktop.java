@@ -156,22 +156,24 @@ public final class Desktop extends ViewPager implements DesktopCallback {
 //            mySfg.setOnFingerGestureListener(getGestureListener());
             layout.setGestures(mySfg);
             layout.setGridSize(5, 6);
-            layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    exitDesktopEditMode();
-                }
-            });
-            layout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    enterDesktopEditMode();
-                    if (true) {
-                        Tool.vibrate(MainActivity.Companion.getLauncher().getDesktop());
-                    }
-                    return true;
-                }
-            });
+            // TODO 去掉桌面退出长按编辑模式
+//            layout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    exitDesktopEditMode();
+//                }
+//            });
+            // TODO 去掉桌面长按编辑模式
+//            layout.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    enterDesktopEditMode();
+//                    if (true) {
+//                        Tool.vibrate(MainActivity.Companion.getLauncher().getDesktop());
+//                    }
+//                    return true;
+//                }
+//            });
             return layout;
         }
 
