@@ -87,8 +87,10 @@ public class HpDragOption {
                 public void run() {
                     int i = _homeActivity.getDesktop().getCurrentItem();
                     if (i < _homeActivity.getDesktop().getPages().size() - 1) {
+                        // 移动到新的页面
                         _homeActivity.getDesktop().setCurrentItem(i + 1);
                     } else if (i == _homeActivity.getDesktop().getPages().size() - 1) {
+                        // 添加新的页面
                         _homeActivity.getDesktop().addPageRight(false);
                     }
                     dragHandler.postDelayed(this, 1000);

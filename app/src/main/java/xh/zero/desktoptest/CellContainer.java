@@ -600,4 +600,8 @@ public class CellContainer extends ViewGroup {
             curBottom = t + _cellHeight;
         }
     }
+
+    public Boolean isEmpty() {
+        return getChildCount() == 0;
+    }
 }

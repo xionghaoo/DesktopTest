@@ -4,6 +4,7 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
@@ -16,6 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import in.championswimmer.sfg.lib.SimpleFingerGestures;
 
@@ -488,6 +490,15 @@ public final class Desktop extends ViewPager implements DesktopCallback {
         wallpaperManager.setWallpaperOffsets(getWindowToken(), xOffset, 0.0f);
         super.onPageScrolled(position, offset, offsetPixels);
     }
+
+//    @Override
+//    public void setCurrentItem(int item) {
+//        super.setCurrentItem(item);
+//        for (int i = 0; i < _pages.size(); i++) {
+//            CellContainer page = _pages.get(i);
+//            Log.d("Desktop", "page " + i + " is empty = " + page.isEmpty());
+//        }
+//    }
 
     public interface OnDesktopEditListener {
         void onStartDesktopEdit();
