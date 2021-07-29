@@ -5,23 +5,60 @@
     android:id="@+id/item_option_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/holo_blue_light"
     tools:context=".MainActivity">
 
-    <xh.zero.desktoptest.Desktop
-        android:id="@+id/desktop"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never" />
+        android:layout_height="match_parent">
+        <xh.zero.desktoptest.Desktop
+            android:id="@+id/desktop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
 
-    <xh.zero.desktoptest.GroupPopupView
-        android:id="@+id/groupPopup"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintVertical_bias="1.0" />
+        <xh.zero.desktoptest.GroupPopupView
+            android:id="@+id/groupPopup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <xh.zero.desktoptest.PagerIndicator
+            android:id="@+id/desktopIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_gravity="bottom"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/dock" />
+
+        <View
+            android:id="@+id/leftDragHandle"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:alpha="0"
+            android:background="@drawable/new_page"
+            android:translationX="-6dp"
+            app:layout_constraintBottom_toBottomOf="@+id/desktop"
+            app:layout_constraintLeft_toLeftOf="@+id/desktop"
+            app:layout_constraintTop_toTopOf="@+id/desktop" />
+
+        <View
+            android:id="@+id/rightDragHandle"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:alpha="0"
+            android:background="@drawable/new_page"
+            android:translationX="6dp"
+            app:layout_constraintBottom_toBottomOf="@+id/desktop"
+            app:layout_constraintRight_toRightOf="@+id/desktop"
+            app:layout_constraintTop_toTopOf="@+id/desktop" />
+    </FrameLayout>
 
 </xh.zero.desktoptest.ItemOptionView>

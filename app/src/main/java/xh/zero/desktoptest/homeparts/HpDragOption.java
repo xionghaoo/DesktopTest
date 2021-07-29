@@ -23,121 +23,121 @@ public class HpDragOption {
     public void initDragNDrop(@NonNull final MainActivity _homeActivity, final View leftDragHandle, final View rightDragHandle, @NonNull final ItemOptionView dragNDropView) {
         final Handler dragHandler = new Handler();
 
-//        dragNDropView.registerDropTarget(new DropTargetListener() {
-//            Runnable runnable = new Runnable() {
-//                @Override
-//                public void run() {
-//                    int i = _homeActivity.getDesktop().getCurrentItem();
-//                    if (i > 0) {
-//                        _homeActivity.getDesktop().setCurrentItem(i - 1);
-//                    } else if (i == 0) {
-//                        _homeActivity.getDesktop().addPageLeft(true);
-//                    }
-//                    dragHandler.postDelayed(this, 1000);
-//                }
-//            };
-//
-//            @Override
-//            public View getView() {
-//                return leftDragHandle;
-//            }
-//
-//            @Override
-//            public boolean onStart(Action action, PointF location, boolean isInside) {
-//                return true;
-//            }
-//
-//            @Override
-//            public void onStartDrag(Action action, PointF location) {
-//                leftDragHandle.animate().alpha(0.5f);
-//            }
-//
-//            @Override
-//            public void onEnter(Action action, PointF location) {
-//                dragHandler.post(runnable);
-//                leftDragHandle.animate().alpha(0.9f);
-//            }
-//
-//            @Override
-//            public void onMove(Action action, PointF location) {
-//                // do nothing
-//            }
-//
-//            @Override
-//            public void onDrop(Action action, PointF location, Item item) {
-//                // do nothing
-//            }
-//
-//            @Override
-//            public void onExit(Action action, PointF location) {
-//                dragHandler.removeCallbacksAndMessages(null);
-//                leftDragHandle.animate().alpha(0.5f);
-//            }
-//
-//            @Override
-//            public void onEnd() {
-//                dragHandler.removeCallbacksAndMessages(null);
-//                leftDragHandle.animate().alpha(0f);
-//            }
-//        });
+        dragNDropView.registerDropTarget(new DropTargetListener() {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    int i = _homeActivity.getDesktop().getCurrentItem();
+                    if (i > 0) {
+                        _homeActivity.getDesktop().setCurrentItem(i - 1);
+                    } else if (i == 0) {
+                        _homeActivity.getDesktop().addPageLeft(true);
+                    }
+                    dragHandler.postDelayed(this, 1000);
+                }
+            };
 
-//        dragNDropView.registerDropTarget(new DropTargetListener() {
-//            Runnable runnable = new Runnable() {
-//                @Override
-//                public void run() {
-//                    int i = _homeActivity.getDesktop().getCurrentItem();
-//                    if (i < _homeActivity.getDesktop().getPages().size() - 1) {
-//                        _homeActivity.getDesktop().setCurrentItem(i + 1);
-//                    } else if (i == _homeActivity.getDesktop().getPages().size() - 1) {
-//                        _homeActivity.getDesktop().addPageRight(true);
-//                    }
-//                    dragHandler.postDelayed(this, 1000);
-//                }
-//            };
-//
-//            @Override
-//            public View getView() {
-//                return rightDragHandle;
-//            }
-//
-//            @Override
-//            public boolean onStart(Action action, PointF location, boolean isInside) {
-//                return true;
-//            }
-//
-//            @Override
-//            public void onStartDrag(Action action, PointF location) {
-//                rightDragHandle.animate().alpha(0.5f);
-//            }
-//
-//            @Override
-//            public void onEnter(Action action, PointF location) {
-//                dragHandler.post(runnable);
-//                rightDragHandle.animate().alpha(0.9f);
-//            }
-//
-//            @Override
-//            public void onMove(Action action, PointF location) {
-//                // do nothing
-//            }
-//
-//            @Override
-//            public void onDrop(Action action, PointF location, Item item) {
-//                // do nothing
-//            }
-//
-//            @Override
-//            public void onExit(Action action, PointF location) {
-//                dragHandler.removeCallbacksAndMessages(null);
-//                rightDragHandle.animate().alpha(0.5f);
-//            }
-//
-//            @Override
-//            public void onEnd() {
-//                dragHandler.removeCallbacksAndMessages(null);
-//                rightDragHandle.animate().alpha(0f);
-//            }
-//        });
+            @Override
+            public View getView() {
+                return leftDragHandle;
+            }
+
+            @Override
+            public boolean onStart(Action action, PointF location, boolean isInside) {
+                return true;
+            }
+
+            @Override
+            public void onStartDrag(Action action, PointF location) {
+                leftDragHandle.animate().alpha(0.5f);
+            }
+
+            @Override
+            public void onEnter(Action action, PointF location) {
+                dragHandler.post(runnable);
+                leftDragHandle.animate().alpha(0.9f);
+            }
+
+            @Override
+            public void onMove(Action action, PointF location) {
+                // do nothing
+            }
+
+            @Override
+            public void onDrop(Action action, PointF location, Item item) {
+                // do nothing
+            }
+
+            @Override
+            public void onExit(Action action, PointF location) {
+                dragHandler.removeCallbacksAndMessages(null);
+                leftDragHandle.animate().alpha(0.5f);
+            }
+
+            @Override
+            public void onEnd() {
+                dragHandler.removeCallbacksAndMessages(null);
+                leftDragHandle.animate().alpha(0f);
+            }
+        });
+
+        dragNDropView.registerDropTarget(new DropTargetListener() {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    int i = _homeActivity.getDesktop().getCurrentItem();
+                    if (i < _homeActivity.getDesktop().getPages().size() - 1) {
+                        _homeActivity.getDesktop().setCurrentItem(i + 1);
+                    } else if (i == _homeActivity.getDesktop().getPages().size() - 1) {
+                        _homeActivity.getDesktop().addPageRight(true);
+                    }
+                    dragHandler.postDelayed(this, 1000);
+                }
+            };
+
+            @Override
+            public View getView() {
+                return rightDragHandle;
+            }
+
+            @Override
+            public boolean onStart(Action action, PointF location, boolean isInside) {
+                return true;
+            }
+
+            @Override
+            public void onStartDrag(Action action, PointF location) {
+                rightDragHandle.animate().alpha(0.5f);
+            }
+
+            @Override
+            public void onEnter(Action action, PointF location) {
+                dragHandler.post(runnable);
+                rightDragHandle.animate().alpha(0.9f);
+            }
+
+            @Override
+            public void onMove(Action action, PointF location) {
+                // do nothing
+            }
+
+            @Override
+            public void onDrop(Action action, PointF location, Item item) {
+                // do nothing
+            }
+
+            @Override
+            public void onExit(Action action, PointF location) {
+                dragHandler.removeCallbacksAndMessages(null);
+                rightDragHandle.animate().alpha(0.5f);
+            }
+
+            @Override
+            public void onEnd() {
+                dragHandler.removeCallbacksAndMessages(null);
+                rightDragHandle.animate().alpha(0f);
+            }
+        });
 
         // desktop drag event
         dragNDropView.registerDropTarget(new DropTargetListener() {

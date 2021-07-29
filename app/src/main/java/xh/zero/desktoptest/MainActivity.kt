@@ -2,6 +2,7 @@ package xh.zero.desktoptest
 
 import android.appwidget.AppWidgetManager
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import xh.zero.desktoptest.homeparts.HpDragOption
 
@@ -37,8 +38,14 @@ class MainActivity : AppCompatActivity() {
         appWidgetHost = WidgetHost(applicationContext, R.id.app_widget_host)
         appWidgetHost?.startListening()
 
+        val findViewById = findViewById<View>(R.id.leftDragHandle)
+        val findViewById2 = findViewById<View>(R.id.rightDragHandle)
+
         val hpDragOption = HpDragOption()
-        hpDragOption.initDragNDrop(this, null, null, getItemOptionView())
+        hpDragOption.initDragNDrop(this, findViewById, findViewById2, getItemOptionView())
+
+        getDesktop().setPageIndicator(getDesktopIndicator())
+        getDesktopIndicator().setMode(PagerIndicator.Mode.DOTS)
 
         initAppManager()
 
@@ -61,6 +68,10 @@ class MainActivity : AppCompatActivity() {
 
     fun getGroupPopup(): GroupPopupView {
         return findViewById(R.id.groupPopup)
+    }
+
+    fun getDesktopIndicator(): PagerIndicator {
+        return findViewById(R.id.desktopIndicator)
     }
 
     protected fun initAppManager() {
@@ -87,7 +98,6 @@ class MainActivity : AppCompatActivity() {
                     getDesktop().addItemToPage(appItem, getDesktop().currentItem)
                 }
             }
-//            getDesktop().initDesktop()
 //            getDock().initDock()
             false
         })

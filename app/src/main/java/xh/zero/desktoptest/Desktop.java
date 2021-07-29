@@ -302,6 +302,7 @@ public final class Desktop extends ViewPager implements DesktopCallback {
         if (_pageIndicator != null) {
             _pageIndicator.setViewPager(this);
         }
+
         int columns = 5;
         int rows = 6;
         List<List<Item>> desktopItems = MainActivity.Companion.getDb().getDesktop();
@@ -315,6 +316,10 @@ public final class Desktop extends ViewPager implements DesktopCallback {
                 }
             }
         }
+    }
+
+    public final void initCell() {
+
     }
 
     public final void addPageRight(boolean showGrid) {
