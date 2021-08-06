@@ -4,11 +4,13 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Point;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +19,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import in.championswimmer.sfg.lib.SimpleFingerGestures;
 
@@ -38,6 +39,10 @@ public final class Desktop extends ViewPager implements DesktopCallback {
     private View _previousItemView;
     private int _previousPage;
 
+    public String[] otherPageTitles = new String[] {
+            "page_1", "page_2", "page_3"
+    };
+
     public Desktop(Context context) {
         super(context, null);
     }
@@ -47,6 +52,8 @@ public final class Desktop extends ViewPager implements DesktopCallback {
     }
 
     public static boolean handleOnDropOver(MainActivity mainActivity, Item dropItem, Item item, View itemView, CellContainer parent, int page, Definitions.ItemPosition itemPosition, DesktopCallback callback) {
+        // dropItem 正在拖动的icon
+        // item 拖动放下的目标icon
         if (item != null) {
             if (dropItem != null) {
                 Item.Type type = item._type;
@@ -55,6 +62,8 @@ public final class Desktop extends ViewPager implements DesktopCallback {
                         case APP:
                         case SHORTCUT:
                             if (Item.Type.APP.equals(dropItem._type) || Item.Type.SHORTCUT.equals(dropItem._type)) {
+                                // 添加App Icon到新的桌面或者当前桌面的文件夹
+                                // App -> App
                                 parent.removeView(itemView);
                                 Item group = Item.newGroupItem();
                                 item._location = Definitions.ItemPosition.Group;
@@ -75,6 +84,8 @@ public final class Desktop extends ViewPager implements DesktopCallback {
                                 }
                                 return true;
                             } else if (Item.Type.GROUP.equals(dropItem._type) && dropItem.getGroupItems().size() < GroupPopupView.GroupDef._maxItem) {
+                                // 添加App Icon到桌面文件夹
+                                // folder -> app
                                 parent.removeView(itemView);
                                 Item group = Item.newGroupItem();
                                 item._location = Definitions.ItemPosition.Group;
@@ -97,6 +108,7 @@ public final class Desktop extends ViewPager implements DesktopCallback {
                             break;
                         case GROUP:
                             if ((Item.Type.APP.equals(dropItem._type) || Item.Type.SHORTCUT.equals(dropItem._type)) && item.getGroupItems().size() < GroupPopupView.GroupDef._maxItem) {
+                                // App -> folder
                                 parent.removeView(itemView);
                                 dropItem._location = Definitions.ItemPosition.Group;
                                 item.getGroupItems().add(dropItem);
@@ -111,6 +123,7 @@ public final class Desktop extends ViewPager implements DesktopCallback {
                                 }
                                 return true;
                             } else if (Item.Type.GROUP.equals(dropItem._type) && item.getGroupItems().size() < GroupPopupView.GroupDef._maxItem && dropItem.getGroupItems().size() < GroupPopupView.GroupDef._maxItem) {
+                                // folder -> folder
                                 parent.removeView(itemView);
                                 item.getGroupItems().addAll(dropItem.getGroupItems());
                                 MainActivity.Companion.getDb().saveItem(item, page, itemPosition);
@@ -135,6 +148,7 @@ public final class Desktop extends ViewPager implements DesktopCallback {
     }
 
     public final class DesktopAdapter extends PagerAdapter {
+
         private final Desktop _desktop;
 
         public DesktopAdapter(Desktop desktop) {
@@ -209,7 +223,7 @@ public final class Desktop extends ViewPager implements DesktopCallback {
 
         @Override
         public int getCount() {
-            return _desktop.getPages().size();
+            return _desktop.getPages().size() + otherPageTitles.length;
         }
 
         @Override
@@ -229,41 +243,61 @@ public final class Desktop extends ViewPager implements DesktopCallback {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            CellContainer layout = _desktop.getPages().get(position);
-            container.addView(layout);
+            View layout = null;
+            // 区分页面类型
+            if (position >= 0 && position < otherPageTitles.length) {
+                FrameLayout page = new FrameLayout(container.getContext());
+                layout = page;
+                container.addView(page);
+                page.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+                page.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+                TextView tv = new TextView(container.getContext());
+                tv.setText(otherPageTitles[position]);
+                page.addView(tv);
+                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) tv.getLayoutParams();
+                page.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                page.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                lp.gravity = Gravity.CENTER;
+            } else {
+                layout = _desktop.getPages().get(position - otherPageTitles.length);
+                container.addView(layout);
+            }
             return layout;
+//            CellContainer layout = _desktop.getPages().get(position);
+//            container.addView(layout);
+//            return layout;
         }
+    }
 
-        private void enterDesktopEditMode() {
-            float scaleFactor = 0.8f;
-            float translateFactor = (float) Tool.dp2px(true ? 20 : 40);
-            for (CellContainer v : _desktop.getPages()) {
-                v.setBlockTouch(true);
-                v.animateBackgroundShow();
-                ViewPropertyAnimator animation = v.animate().scaleX(scaleFactor).scaleY(scaleFactor).translationY(translateFactor);
-                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-            }
-            _desktop.setInEditMode(true);
-            if (_desktop.getDesktopEditListener() != null) {
-                OnDesktopEditListener desktopEditListener = _desktop.getDesktopEditListener();
-                desktopEditListener.onStartDesktopEdit();
-            }
+    public void enterDesktopEditMode() {
+        float scaleFactor = 0.9f;
+        float translateFactor = (float) Tool.dp2px(true ? 20 : 40);
+        for (CellContainer v : getPages()) {
+            v.setBlockTouch(true);
+            v.animateBackgroundShow();
+            ViewPropertyAnimator animation = v.animate().scaleX(scaleFactor).scaleY(scaleFactor).translationY(translateFactor);
+            animation.setInterpolator(new AccelerateDecelerateInterpolator());
         }
+        setInEditMode(true);
+        if (getDesktopEditListener() != null) {
+            OnDesktopEditListener desktopEditListener = getDesktopEditListener();
+            desktopEditListener.onStartDesktopEdit();
+        }
+    }
 
-        private void exitDesktopEditMode() {
-            float scaleFactor = 1.0f;
-            float translateFactor = 0.0f;
-            for (CellContainer v : _desktop.getPages()) {
-                v.setBlockTouch(false);
-                v.animateBackgroundHide();
-                ViewPropertyAnimator animation = v.animate().scaleX(scaleFactor).scaleY(scaleFactor).translationY(translateFactor);
-                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-            }
-            _desktop.setInEditMode(false);
-            if (_desktop.getDesktopEditListener() != null) {
-                OnDesktopEditListener desktopEditListener = _desktop.getDesktopEditListener();
-                desktopEditListener.onFinishDesktopEdit();
-            }
+    public void exitDesktopEditMode() {
+        float scaleFactor = 1.0f;
+        float translateFactor = 0.0f;
+        for (CellContainer v : getPages()) {
+            v.setBlockTouch(false);
+            v.animateBackgroundHide();
+            ViewPropertyAnimator animation = v.animate().scaleX(scaleFactor).scaleY(scaleFactor).translationY(translateFactor);
+            animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        }
+        setInEditMode(false);
+        if (getDesktopEditListener() != null) {
+            OnDesktopEditListener desktopEditListener = getDesktopEditListener();
+            desktopEditListener.onFinishDesktopEdit();
         }
     }
 
@@ -292,7 +326,17 @@ public final class Desktop extends ViewPager implements DesktopCallback {
     }
 
     public final CellContainer getCurrentPage() {
-        return _pages.get(getCurrentItem());
+        int currentIndex = getCurrentItem() - otherPageTitles.length;
+        return _pages.get(currentIndex < 0 ? 0 : currentIndex);
+    }
+
+    public final int getRelatedCurrentItem() {
+        int currentIndex = getCurrentItem() - otherPageTitles.length;
+        return currentIndex < 0 ? 0 : currentIndex;
+    }
+
+    public final int getTotalPageSize() {
+        return _pages.size() + otherPageTitles.length;
     }
 
     public final void setPageIndicator(PagerIndicator pageIndicator) {
@@ -330,11 +374,6 @@ public final class Desktop extends ViewPager implements DesktopCallback {
         int previousPage = getCurrentItem();
         _adapter.addPageRight();
         setCurrentItem(previousPage + 1);
-        if (true) {
-            for (CellContainer cellContainer : _pages) {
-                cellContainer.setHideGrid(!showGrid);
-            }
-        }
         _pageIndicator.invalidate();
     }
 
@@ -351,17 +390,17 @@ public final class Desktop extends ViewPager implements DesktopCallback {
         _pageIndicator.invalidate();
     }
 
-    public final void removeCurrentPage() {
-        int previousPage = getCurrentItem();
-        _adapter.removePage(getCurrentItem(), true);
-        if (_pages.size() == 0) {
-            addPageRight(false);
-            _adapter.exitDesktopEditMode();
-        } else {
-            setCurrentItem(previousPage, true);
-            _pageIndicator.invalidate();
-        }
-    }
+//    public final void removeCurrentPage() {
+//        int previousPage = getCurrentItem();
+//        _adapter.removePage(getCurrentItem(), true);
+//        if (_pages.size() == 0) {
+//            addPageRight(false);
+//            _adapter.exitDesktopEditMode();
+//        } else {
+//            setCurrentItem(previousPage, true);
+//            _pageIndicator.invalidate();
+//        }
+//    }
 
     public final void updateIconProjection(int x, int y) {
         MainActivity launcher = MainActivity.Companion.getLauncher();
@@ -474,6 +513,10 @@ public final class Desktop extends ViewPager implements DesktopCallback {
         } else if (getCurrentPage().equals(view.getParent())) {
             getCurrentPage().removeView(view);
         }
+    }
+
+    public void removePage(int position) {
+        _adapter.removePage(position, true);
     }
 
     @Override

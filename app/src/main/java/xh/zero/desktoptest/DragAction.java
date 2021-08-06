@@ -8,6 +8,6 @@ public class DragAction {
     }
 
     public enum Action {
-        DESKTOP, DRAWER, SEARCH
+        DESKTOP
     }
 }

@@ -3,6 +3,7 @@ package xh.zero.desktoptest.homeparts;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -23,15 +24,16 @@ public class HpDragOption {
     public void initDragNDrop(@NonNull final MainActivity _homeActivity, final View leftDragHandle, final View rightDragHandle, @NonNull final ItemOptionView dragNDropView) {
         final Handler dragHandler = new Handler();
 
+        // 左边缘处理
         dragNDropView.registerDropTarget(new DropTargetListener() {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    int i = _homeActivity.getDesktop().getCurrentItem();
+                    int i = _homeActivity.getDesktop().getRelatedCurrentItem();
                     if (i > 0) {
-                        _homeActivity.getDesktop().setCurrentItem(i - 1);
-                    } else if (i == 0) {
-                        _homeActivity.getDesktop().addPageLeft(true);
+                        _homeActivity.getDesktop().setCurrentItem(_homeActivity.getDesktop().getCurrentItem() - 1);
+                    } else if (i <= 0) {
+//                        _homeActivity.getDesktop().addPageLeft(true);
                     }
                     dragHandler.postDelayed(this, 1000);
                 }
@@ -81,17 +83,22 @@ public class HpDragOption {
             }
         });
 
+        // 右边缘处理
         dragNDropView.registerDropTarget(new DropTargetListener() {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     int i = _homeActivity.getDesktop().getCurrentItem();
-                    if (i < _homeActivity.getDesktop().getPages().size() - 1) {
+                    if (i < _homeActivity.getDesktop().getTotalPageSize() - 1) {
                         // 移动到新的页面
-                        _homeActivity.getDesktop().setCurrentItem(i + 1);
-                    } else if (i == _homeActivity.getDesktop().getPages().size() - 1) {
+                        Log.d("mytest", "move to new page");
+                        _homeActivity.getDesktop().setCurrentItem(_homeActivity.getDesktop().getCurrentItem() + 1);
+                    } else if (i == _homeActivity.getDesktop().getTotalPageSize() - 1) {
                         // 添加新的页面
-                        _homeActivity.getDesktop().addPageRight(false);
+                        if (!_homeActivity.getDesktop().getCurrentPage().isEmpty()) {
+                            _homeActivity.getDesktop().addPageRight(false);
+                        }
+                        Log.d("mytest", "add new page");
                     }
                     dragHandler.postDelayed(this, 1000);
                 }
@@ -150,8 +157,12 @@ public class HpDragOption {
 
             @Override
             public boolean onStart(Action action, PointF location, boolean isInside) {
-                if (!DragAction.Action.SEARCH.equals(action))
-                    _homeActivity.getItemOptionView().showItemPopup(_homeActivity);
+                Log.d("mytest", "drag onStart");
+
+//                _homeActivity.getDesktop().enterDesktopEditMode();
+//                Tool.vibrate(MainActivity.Companion.getLauncher().getDesktop());
+
+                _homeActivity.getItemOptionView().showItemPopup(_homeActivity);
                 return true;
             }
 
@@ -186,15 +197,17 @@ public class HpDragOption {
                 int x = (int) location.x;
                 int y = (int) location.y;
                 if (_homeActivity.getDesktop().addItemToPoint(item, x, y)) {
+                    // 在当前页面拖动放置icon(空白处)，如果有合并，会跳到else
                     _homeActivity.getDesktop().consumeLastItem();
 //                    _homeActivity.getDock().consumeLastItem();
                     // add the item to the database
-                    MainActivity.Companion.getDb().saveItem(item, _homeActivity.getDesktop().getCurrentItem(), Definitions.ItemPosition.Desktop);
+                    MainActivity.Companion.getDb().saveItem(item, _homeActivity.getDesktop().getRelatedCurrentItem(), Definitions.ItemPosition.Desktop);
                 } else {
                     Point pos = new Point();
                     _homeActivity.getDesktop().getCurrentPage().touchPosToCoordinate(pos, x, y, item._spanX, item._spanY, false);
                     View itemView = _homeActivity.getDesktop().getCurrentPage().coordinateToChildView(pos);
-                    if (itemView != null && Desktop.handleOnDropOver(_homeActivity, item, (Item) itemView.getTag(), itemView, _homeActivity.getDesktop().getCurrentPage(), _homeActivity.getDesktop().getCurrentItem(), Definitions.ItemPosition.Desktop, _homeActivity.getDesktop())) {
+
+                    if (itemView != null && Desktop.handleOnDropOver(_homeActivity, item, (Item) itemView.getTag(), itemView, _homeActivity.getDesktop().getCurrentPage(), _homeActivity.getDesktop().getRelatedCurrentItem(), Definitions.ItemPosition.Desktop, _homeActivity.getDesktop())) {
                         _homeActivity.getDesktop().consumeLastItem();
 //                        _homeActivity.getDock().consumeLastItem();
                     } else {
@@ -216,13 +229,26 @@ public class HpDragOption {
                     page.clearCachedOutlineBitmap();
                 }
                 dragNDropView.cancelFolderPreview();
+                Log.d("mytest", "drag onExit");
             }
 
             @Override
             public void onEnd() {
-                for (CellContainer page : _homeActivity.getDesktop().getPages()) {
+//                if (_homeActivity.getDesktop().isInEditMode()) {
+//
+//                }
+//                _homeActivity.getDesktop().exitDesktopEditMode();
+                Log.d("mytest", "drag onEnd");
+
+                for (int i = 0; i < _homeActivity.getDesktop().getPages().size(); i++) {
+                    CellContainer page = _homeActivity.getDesktop().getPages().get(i);
                     page.clearCachedOutlineBitmap();
+                    // 删除空白页面
+                    if (page.isEmpty()) {
+                        _homeActivity.getDesktop().removePage(i);
+                    }
                 }
+
 //                if (Setup.appSettings().getDesktopShowGrid()) {
 //                    _homeActivity.getDock().setHideGrid(true);
 //                    for (CellContainer cellContainer : _homeActivity.getDesktop().getPages()) {

@@ -106,14 +106,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void saveItem(Item item) {
+        Log.d("mytest", "save item, item: " + item._id);
+
         updateItem(item);
     }
 
     public void saveItem(Item item, Definitions.ItemState state) {
+        Log.d("mytest", "save item Definitions, item: " + item._id);
+
         updateItem(item, state);
     }
 
     public void saveItem(Item item, int page, Definitions.ItemPosition itemPosition) {
+        Log.d("mytest", "save item, page:" + page + ", item: " + item._id);
         if (item.getId().isEmpty()) {
             createItem(item, page, itemPosition);
         } else {
@@ -152,6 +157,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int page = Integer.parseInt(cursor.getString(pageColumnIndex));
                 int desktopVar = Integer.parseInt(cursor.getString(desktopColumnIndex));
                 int stateVar = Integer.parseInt(cursor.getString(stateColumnIndex));
+                Log.d("mytest", "getDesktop, page:" + page);
+
                 while (page >= desktop.size()) {
                     desktop.add(new ArrayList<>());
                 }
@@ -164,24 +171,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return desktop;
     }
 
-    public List<Item> getDock() {
-        String SQL_QUERY_DESKTOP = SQL_QUERY + TABLE_HOME;
-        Cursor cursor = _db.rawQuery(SQL_QUERY_DESKTOP, null);
-        List<Item> dock = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            int desktopColumnIndex = cursor.getColumnIndex(COLUMN_DESKTOP);
-            int stateColumnIndex = cursor.getColumnIndex(COLUMN_STATE);
-            do {
-                int desktopVar = Integer.parseInt(cursor.getString(desktopColumnIndex));
-                int stateVar = Integer.parseInt(cursor.getString(stateColumnIndex));
-                if (desktopVar == Definitions.ItemPosition.Dock.ordinal() && stateVar == Definitions.ItemState.Visible.ordinal()) {
-                    dock.add(getSelection(cursor));
-                }
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return dock;
-    }
+//    public List<Item> getDock() {
+//        String SQL_QUERY_DESKTOP = SQL_QUERY + TABLE_HOME;
+//        Cursor cursor = _db.rawQuery(SQL_QUERY_DESKTOP, null);
+//        List<Item> dock = new ArrayList<>();
+//        if (cursor.moveToFirst()) {
+//            int desktopColumnIndex = cursor.getColumnIndex(COLUMN_DESKTOP);
+//            int stateColumnIndex = cursor.getColumnIndex(COLUMN_STATE);
+//            do {
+//                int desktopVar = Integer.parseInt(cursor.getString(desktopColumnIndex));
+//                int stateVar = Integer.parseInt(cursor.getString(stateColumnIndex));
+//                if (desktopVar == Definitions.ItemPosition.Dock.ordinal() && stateVar == Definitions.ItemState.Visible.ordinal()) {
+//                    dock.add(getSelection(cursor));
+//                }
+//            } while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//        return dock;
+//    }
 
     public Item getItem(String id) {
         String SQL_QUERY_SPECIFIC = SQL_QUERY + TABLE_HOME + " WHERE " + COLUMN_TIME + " = \"" + id + "\"";

@@ -20,26 +20,10 @@ public final class DragHandler {
             desktopCallback.setLastItem(item, view);
     }
 
-//    public static void startDragHome(View view, Item item, DragAction.Action action, final DesktopCallback desktopCallback) {
-//        _cachedDragBitmap = loadBitmapFromView(view);
-//
-//        if (DesktopHomeActivity.Companion.getLauncher() != null)
-//            DesktopHomeActivity.Companion.getLauncher().getItemOptionView().startDragNDropOverlay(view, item, action);
-//
-//        if (desktopCallback != null)
-//            desktopCallback.setLastItem(item, view);
-//    }
-
     public static View.OnLongClickListener getLongClick(final Item item, final DragAction.Action action, final DesktopCallback desktopCallback) {
         return new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-//                if (Setup.appSettings().getDesktopLock()) {
-//                    return false;
-//                }
-//                if (Setup.appSettings().getGestureFeedback()) {
-//                    Tool.vibrate(view);
-//                }
                 startDrag(view, item, action, desktopCallback);
                 return true;
             }

@@ -10,6 +10,7 @@ import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 
@@ -339,10 +340,6 @@ public final class ItemOptionView extends FrameLayout {
         switch (getDragItem().getType()) {
             case APP:
             case SHORTCUT:
-                if (!getDragAction().equals(DragAction.Action.DRAWER)) {
-                    itemList.add(editItem);
-                    itemList.add(removeItem);
-                }
                 itemList.add(uninstallItem);
                 itemList.add(infoItem);
                 break;
@@ -477,4 +474,28 @@ public final class ItemOptionView extends FrameLayout {
 
         return true;
     }
+
+//    public void enterDesktopEditMode() {
+//        float scaleFactor = 0.9f;
+//        float translateFactor = (float) Tool.dp2px(true ? 20 : 40);
+//        ViewPropertyAnimator animation = animate().scaleX(scaleFactor).scaleY(scaleFactor).translationY(translateFactor);
+//        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+////        setInEditMode(true);
+////        if (getDesktopEditListener() != null) {
+////            Desktop.OnDesktopEditListener desktopEditListener = getDesktopEditListener();
+////            desktopEditListener.onStartDesktopEdit();
+////        }
+//    }
+//
+//    public void exitDesktopEditMode() {
+//        float scaleFactor = 1.0f;
+//        float translateFactor = 0.0f;
+//        ViewPropertyAnimator animation = animate().scaleX(scaleFactor).scaleY(scaleFactor).translationY(translateFactor);
+//        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+////        setInEditMode(false);
+////        if (getDesktopEditListener() != null) {
+////            Desktop.OnDesktopEditListener desktopEditListener = getDesktopEditListener();
+////            desktopEditListener.onFinishDesktopEdit();
+////        }
+//    }
 }

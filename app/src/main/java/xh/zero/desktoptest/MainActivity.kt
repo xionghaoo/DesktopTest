@@ -68,19 +68,7 @@ class MainActivity : AppCompatActivity() {
         return findViewById(R.id.desktopIndicator)
     }
 
-    protected fun initAppManager() {
-        if (true) {
-//            Setup.appSettings().setAppFirstLaunch(false)
-//            Setup.appSettings().setAppShowIntro(false)
-//            val appDrawerBtnItem = Item.newActionItem(8)
-//            appDrawerBtnItem._x = 2
-//            db?.saveItem(
-//                appDrawerBtnItem,
-//                0,
-//                Definitions.ItemPosition.Dock
-//            )
-        }
-
+    fun initAppManager() {
         val desktopItems = db.desktop
         if (desktopItems.isEmpty()) {
             // 数据库为空，首次加载桌面
@@ -92,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                     if (pos != null) {
                         appItem._x = pos.x
                         appItem._y = pos.y
-                        db?.saveItem(appItem, 0, Definitions.ItemPosition.Desktop)
+                        db.saveItem(appItem, 0, Definitions.ItemPosition.Desktop)
                         getDesktop().addItemToPage(appItem, getDesktop().currentItem)
                     }
                 }
