@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             // 数据库为空，首次加载桌面
             getDesktop().initDesktop()
             appLoader?.addUpdateListener(AppUpdateListener { apps ->
-                for (i in 0..20) {
+                for (i in 0.until(apps.size)) {
                     val appItem = Item.newAppItem(apps[i])
                     val pos = getDesktop().currentPage.findFreeSpace()
                     if (pos != null) {

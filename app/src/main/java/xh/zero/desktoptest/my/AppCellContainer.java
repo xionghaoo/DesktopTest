@@ -1,12 +1,12 @@
-package xh.zero.desktoptest;
+package xh.zero.desktoptest.my;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Join;
-import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.championswimmer.sfg.lib.SimpleFingerGestures;
+import xh.zero.desktoptest.CellContainer;
+import xh.zero.desktoptest.Tool;
 
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-
-public class CellContainer extends ViewGroup {
+public class AppCellContainer extends ViewGroup {
     private boolean _animateBackground;
     private final Paint _bgPaint = new Paint(1);
     private boolean _blockTouch;
@@ -39,11 +39,11 @@ public class CellContainer extends ViewGroup {
     private Long _down = Long.valueOf(0);
     @Nullable
     private SimpleFingerGestures _gestures;
-//    private boolean _hideGrid = true;
+    //    private boolean _hideGrid = true;
 //    private final Paint _paint = new Paint(1);
     private boolean[][] _occupied;
     private final Paint _outlinePaint = new Paint(1);
-    private PeekDirection _peekDirection;
+    private CellContainer.PeekDirection _peekDirection;
     private Long _peekDownTime = Long.valueOf(-1);
     private Point _preCoordinate = new Point(-1, -1);
     private Point _startCoordinate = new Point();
@@ -149,18 +149,18 @@ public class CellContainer extends ViewGroup {
         return views;
     }
 
-    public CellContainer(Context context) {
+    public AppCellContainer(Context context) {
         this(context, null);
     }
 
-    public CellContainer(Context context, AttributeSet attr) {
+    public AppCellContainer(Context context, AttributeSet attr) {
         super(context, attr);
 //        _paint.setStyle(Style.STROKE);
 //        _paint.setStrokeWidth(2.0f);
 //        _paint.setStrokeJoin(Join.ROUND);
 //        _paint.setColor(Color.WHITE);
 //        _paint.setAlpha(0);
-        _bgPaint.setStyle(Style.FILL);
+        _bgPaint.setStyle(Paint.Style.FILL);
         _bgPaint.setColor(Color.WHITE);
         _bgPaint.setAlpha(0);
         _outlinePaint.setColor(Color.WHITE);
@@ -223,12 +223,12 @@ public class CellContainer extends ViewGroup {
     }
 
     @NonNull
-    public final DragState peekItemAndSwap(@NonNull DragEvent event, @NonNull Point coordinate) {
+    public final CellContainer.DragState peekItemAndSwap(@NonNull DragEvent event, @NonNull Point coordinate) {
         return peekItemAndSwap((int) event.getX(), (int) event.getY(), coordinate);
     }
 
     @NonNull
-    public final DragState peekItemAndSwap(int x, int y, Point coordinate) {
+    public final CellContainer.DragState peekItemAndSwap(int x, int y, Point coordinate) {
         touchPosToCoordinate(coordinate, x, y, 1, 1, false, false);
         if (coordinate.x != -1 && coordinate.y != -1) {
             if (_startCoordinate == null) {
@@ -243,26 +243,26 @@ public class CellContainer extends ViewGroup {
                 _preCoordinate = coordinate;
             }
             if (_occupied[coordinate.x][coordinate.y]) {
-                return DragState.CurrentOccupied;
+                return CellContainer.DragState.CurrentOccupied;
             } else {
-                return DragState.CurrentNotOccupied;
+                return CellContainer.DragState.CurrentNotOccupied;
             }
         }
-        return DragState.OutOffRange;
+        return CellContainer.DragState.OutOffRange;
     }
 
-    private PeekDirection getPeekDirectionFromCoordinate(Point from, Point to) {
+    private CellContainer.PeekDirection getPeekDirectionFromCoordinate(Point from, Point to) {
         if (from.y - to.y > 0) {
-            return PeekDirection.UP;
+            return CellContainer.PeekDirection.UP;
         }
         if (from.y - to.y < 0) {
-            return PeekDirection.DOWN;
+            return CellContainer.PeekDirection.DOWN;
         }
         if (from.x - to.x > 0) {
-            return PeekDirection.LEFT;
+            return CellContainer.PeekDirection.LEFT;
         }
         if (from.x - to.x < 0) {
-            return PeekDirection.RIGHT;
+            return CellContainer.PeekDirection.RIGHT;
         }
         return null;
     }
@@ -378,15 +378,15 @@ public class CellContainer extends ViewGroup {
 //        }
 
         //Animating alpha and drawing projected image
-        MainActivity homeActivity = MainActivity.Companion.getLauncher();
-        if (homeActivity != null && homeActivity.getItemOptionView().getDragExceedThreshold() && _currentOutlineCoordinate.x != -1 && _currentOutlineCoordinate.y != -1) {
-            if (_outlinePaint.getAlpha() != 160)
-                _outlinePaint.setAlpha(Math.min(_outlinePaint.getAlpha() + 20, 160));
-            drawCachedOutlineBitmap(canvas, _cells[_currentOutlineCoordinate.x][_currentOutlineCoordinate.y]);
-
-            if (_outlinePaint.getAlpha() <= 160)
-                invalidate();
-        }
+//        MainActivity homeActivity = MainActivity.Companion.getLauncher();
+//        if (homeActivity != null && homeActivity.getItemOptionView().getDragExceedThreshold() && _currentOutlineCoordinate.x != -1 && _currentOutlineCoordinate.y != -1) {
+//            if (_outlinePaint.getAlpha() != 160)
+//                _outlinePaint.setAlpha(Math.min(_outlinePaint.getAlpha() + 20, 160));
+//            drawCachedOutlineBitmap(canvas, _cells[_currentOutlineCoordinate.x][_currentOutlineCoordinate.y]);
+//
+//            if (_outlinePaint.getAlpha() <= 160)
+//                invalidate();
+//        }
 
         //Animating alpha
 //        if (_hideGrid && _paint.getAlpha() != 0) {
@@ -408,19 +408,19 @@ public class CellContainer extends ViewGroup {
     }
 
     public void addView(View view) {
-        LayoutParams lp = (LayoutParams) view.getLayoutParams();
+        CellContainer.LayoutParams lp = (CellContainer.LayoutParams) view.getLayoutParams();
         setOccupied(true, lp);
         super.addView(view);
     }
 
     public void removeView(View view) {
-        LayoutParams lp = (LayoutParams) view.getLayoutParams();
+        CellContainer.LayoutParams lp = (CellContainer.LayoutParams) view.getLayoutParams();
         setOccupied(false, lp);
         super.removeView(view);
     }
 
     public final void addViewToGrid(@NonNull View view, int x, int y, int xSpan, int ySpan) {
-        view.setLayoutParams(new LayoutParams(WRAP_CONTENT, WRAP_CONTENT, x, y, xSpan, ySpan));
+        view.setLayoutParams(new CellContainer.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, x, y, xSpan, ySpan));
         addView(view);
     }
 
@@ -428,7 +428,7 @@ public class CellContainer extends ViewGroup {
         addView(view);
     }
 
-    public final void setOccupied(boolean b, @NonNull LayoutParams lp) {
+    public final void setOccupied(boolean b, @NonNull CellContainer.LayoutParams lp) {
         int xSpan = lp.getX() + lp.getXSpan();
         for (int x = lp.getX(); x < xSpan; x++) {
             int ySpan = lp.getY() + lp.getYSpan();
@@ -463,7 +463,7 @@ public class CellContainer extends ViewGroup {
             return null;
         }
         for (int i = 0; i < getChildCount(); i++) {
-            LayoutParams lp = (LayoutParams) getChildAt(i).getLayoutParams();
+            CellContainer.LayoutParams lp = (CellContainer.LayoutParams) getChildAt(i).getLayoutParams();
             if (pos.x >= lp._x && pos.y >= lp._y && pos.x < lp._x + lp._xSpan && pos.y < lp._y + lp._ySpan) {
                 return getChildAt(i);
             }
@@ -471,10 +471,10 @@ public class CellContainer extends ViewGroup {
         return null;
     }
 
-    public final LayoutParams coordinateToLayoutParams(int mX, int mY, int xSpan, int ySpan) {
+    public final CellContainer.LayoutParams coordinateToLayoutParams(int mX, int mY, int xSpan, int ySpan) {
         Point pos = new Point();
         touchPosToCoordinate(pos, mX, mY, xSpan, ySpan, true);
-        return !pos.equals(-1, -1) ? new LayoutParams(WRAP_CONTENT, WRAP_CONTENT, pos.x, pos.y, xSpan, ySpan) : null;
+        return !pos.equals(-1, -1) ? new CellContainer.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, pos.x, pos.y, xSpan, ySpan) : null;
     }
 
     public void touchPosToCoordinate(@NonNull Point coordinate, int mX, int mY, int xSpan, int ySpan, boolean checkAvailability) {
@@ -559,7 +559,7 @@ public class CellContainer extends ViewGroup {
             while (i < count) {
                 View child = getChildAt(i);
                 if (child.getVisibility() != View.GONE) {
-                    LayoutParams lp = (LayoutParams) child.getLayoutParams();
+                    CellContainer.LayoutParams lp = (CellContainer.LayoutParams) child.getLayoutParams();
                     child.measure(MeasureSpec.makeMeasureSpec(lp.getXSpan() * _cellWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(lp.getYSpan() * _cellHeight, MeasureSpec.EXACTLY));
                     Rect[][] rectArr = _cells;
                     Rect upRect = rectArr[lp.getX()][lp.getY()];
